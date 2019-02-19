@@ -1,8 +1,8 @@
 %starA(M, A, B)
-%STARA    ¸ù¾İA*Ëã·¨¼ÆËãÁ½µã¼äµÄ×î¶ÌÂ·¾¶
-%   MÎª¾ØÕó
-%   AÎªÆğµã
-%   BÎªÖÕµã
+%STARA    æ ¹æ®A*ç®—æ³•è®¡ç®—ä¸¤ç‚¹é—´çš„æœ€çŸ­è·¯å¾„
+%   Mä¸ºçŸ©é˜µ
+%   Aä¸ºèµ·ç‚¹
+%   Bä¸ºç»ˆç‚¹
 
 clear;clc
 M = [0 0 0 1 0 0 0;
@@ -12,7 +12,7 @@ M = [0 0 0 1 0 0 0;
      0 0 0 0 0 0 0;];
 A = [3,2];
 B = [3,6];
-notCross = 1; % MÖĞ²»ÄÜÍ¨¹ıµÄµãµÄÖµ
+notCross = 1; % Mä¸­ä¸èƒ½é€šè¿‡çš„ç‚¹çš„å€¼
 %% ==============================================
 global F G parent row
 
@@ -25,35 +25,36 @@ mov = [1 0;-1 0; 0 1;0 -1;-1 -1; -1 1; 1 -1; 1 1];
 open = [A];
 close = [];
 parent = zeros(size(M));
-inOpen = false(size(M));   % ÊÇ·ñÔÚ¿ª·ÅÁĞ±íÖĞ
-inClose = false(size(M));  % ÊÇ·ñÔÚ¹Ø±ÕÁĞ±íÖĞ
+inOpen = false(size(M));   % æ˜¯å¦åœ¨å¼€æ”¾åˆ—è¡¨ä¸­
+inClose = false(size(M));  % æ˜¯å¦åœ¨å…³é—­åˆ—è¡¨ä¸­
 %% ================================================
 %
 inOpen(A(1),A(2)) = true;
 G(A(1),A(2)) = 0;
 F(A(1),A(2)) = hn(A,B);
 [index,min] = minInOpen(open);
-while min(1)~=B(1)||min(2)~=B(2)   %½áÊøÌõ¼ş(Ò²¾ÍÊÇÖÕµã±»·ÅÈëµ½)£¬
-    open(index,:) = [];     %´Ó¿ª·ÅÁĞ±íÖĞÉ¾³ı
+while min(1)~=B(1)||min(2)~=B(2)   %ç»“æŸæ¡ä»¶(ä¹Ÿå°±æ˜¯ç»ˆç‚¹è¢«æ”¾å…¥åˆ°)ï¼Œ
+    open(index,:) = [];     %ä»å¼€æ”¾åˆ—è¡¨ä¸­åˆ é™¤
     inOpen(min(1), min(2)) = false;
     close = [close;min];
     inClose(min(1), min(2)) = true;
     
-    % ¼ÆËã8ÁìÓòÖĞ¸÷µãµÄfn£¬gn£¬hn¡£
+    % è®¡ç®—8é¢†åŸŸä¸­å„ç‚¹çš„fnï¼Œgnï¼Œhnã€‚
     for i=1:8
         temp = min + mov(i,:);
         if temp(1)<=row&&temp(1)>0&&temp(2)<=col&&temp(2)>0
-            if M(temp(1),temp(2)) ~= notCross&&inClose(temp(1),temp(2)) == false      % ¸Ãµã¿ÉÒÔÍ¨¹ıÇÒ²»ÔÚ·â±ÕÁĞ±íÖĞ
-                if inOpen(temp(1),temp(2)) == 0    %  ²»ÔÚ¿ª·ÅÁĞ±íÖĞ£¬¼ÓÈëopen
+            if M(temp(1),temp(2)) ~= notCross&&inClose(temp(1),temp(2)) == false      % è¯¥ç‚¹å¯ä»¥é€šè¿‡ä¸”ä¸åœ¨å°é—­åˆ—è¡¨ä¸­
+                if inOpen(temp(1),temp(2)) == 0    %  ä¸åœ¨å¼€æ”¾åˆ—è¡¨ä¸­ï¼ŒåŠ å…¥open
                     parent(temp(1),temp(2)) = (min(2)-1)*row+ min(1);
                     open = [open;temp];
                     G(temp(1),temp(2)) = gn(temp);
                     F(temp(1),temp(2)) = G(temp(1),temp(2))+hn(temp,B);
                     inOpen(temp(1), temp(2)) = true;
-                else           % ÔÚ¿ª·ÅÁĞ±íÖĞ
+                else           % åœ¨å¼€æ”¾åˆ—è¡¨ä¸­
                     gnn = norm(min-temp) + G(min(1),min(2)); %
                     if gnn < G(temp(1),temp(2))
                         parent(temp(1),temp(2)) = downRank(min);
+                        G(temp(1),temp(2))ï¼gnn;
                     end
                 end
             end
@@ -62,7 +63,7 @@ while min(1)~=B(1)||min(2)~=B(2)   %½áÊøÌõ¼ş(Ò²¾ÍÊÇÖÕµã±»·ÅÈëµ½)£¬
     
     [index,min] = minInOpen(open);
 end
-% »ØËİÕÒÂ·¾¶
+% å›æº¯æ‰¾è·¯å¾„
 route =[B];
 t=parent(B(1),B(2));
 indA = downRank(A);
